@@ -1,0 +1,18 @@
+<div class="row justify-content-md-center">
+    <div class="col-md-6">
+        <form [formGroup]="signInFormGroup" (ngSubmit)="login(signInFormGroup.value)">  
+            <!-- when using form group ngModel for cerating ref in this html is not possible instead use formgroup to access those elements -->
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="text" class="form-control" name="email" formControlName="email"> 
+            </div>
+            <div class="alert alert-secondary" [hidden]="!signInFormGroup.controls.email.touched || signInFormGroup.controls.email.valid">Invalid Email</div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" formControlName="password"> 
+            </div>
+            <div class="alert alert-secondary" [hidden]="!signInFormGroup.controls.password.touched || signInFormGroup.controls.password.valid">Password is required</div>
+            <button class="btn btn-dark" [disabled]="signInFormGroup.invalid" type="submit">Sign Up</button>
+        </form>
+    </div>
+</div>
