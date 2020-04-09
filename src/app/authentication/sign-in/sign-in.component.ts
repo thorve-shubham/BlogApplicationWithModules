@@ -17,8 +17,8 @@ export class SignInComponent implements OnInit {
   public password : string;
 
   constructor(
-        public formBuilder : FormBuilder,private authService : AuthenticationService,public toastr : ToastrManager,
-        public router : Router
+        public formBuilder : FormBuilder,
+        private authService : AuthenticationService,
     ) { }
 
   ngOnInit(): void {
@@ -30,29 +30,6 @@ export class SignInComponent implements OnInit {
 
   login(Data){
     this.authService.login(Data);
-    // this.authService.login(Data).subscribe(
-    //   data=>{
-    //     if(data["error"]){
-    //       console.log(data);
-    //       console.log('ala');
-    //       this.toastr.errorToastr(data["message"],"Oops!");
-          
-    //     }else{
-    //       this.authService.setLoginStatus(true);
-    //       console.log(data);
-    //       console.log('ala');
-    //       Cookie.set('authToken',data["data"]);
-    //       this.toastr.successToastr("Login Successful","Success!");
-    //       setTimeout(()=>{
-    //         this.router.navigate(["user/home"]);
-    //       },1000);
-    //     }
-    //   },
-    //   err=>{
-    //     console.log('ala');
-    //     this.toastr.errorToastr("Something went Wrong","Oops!");
-    //   }
-    // );
   }
 
 }

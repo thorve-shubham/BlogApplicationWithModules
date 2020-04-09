@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Cookie } from 'ng2-cookies';
 import { ToastrManager } from 'ng6-toastr-notifications';
 import { Router } from '@angular/router';
+import * as jwt from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ import { Router } from '@angular/router';
 export class AuthenticationService {
 
   private loginStatus = new BehaviorSubject<boolean>(this.checkLoginStatus());
+  private currentUser = new BehaviorSubject<string>(null);
 
   constructor(public _http:HttpClient,public toastr : ToastrManager,public router:Router) { }
 
@@ -19,17 +21,33 @@ export class AuthenticationService {
     return this.loginStatus.asObservable(); 
   }
 
-  setLoginStatus(status:boolean){
-    this.loginStatus.next(status);
-    console.log("setting status"+status);
+  get isCurrentUser(){
+    return this.currentUser.asObservable();
   }
 
   signUpUser(userData:signUpModel){
     return this._http.post("http://localhost:3000/user/create",userData);
   }
 
+  isAuthenticated(){
+    const token = localStorage.getItem('authToken');
+    console.log('checking auth');
+    if(!token){
+      this.toastr.errorToastr("Access Denied","Oops!");
+      return false;
+    }else{
+      try{
+        const decoded = jwt(token);
+        return true;
+      }
+      catch(err){
+        this.toastr.errorToastr("Invalid Token Provided","Oops!");
+        return false;
+      }
+    }
+  }
+
   login(Data){
-    //this.loginStatus.next(true);
     this._http.post("http://localhost:3000/user/login",Data).subscribe(
         data=>{
           if(data["error"]){
@@ -39,13 +57,16 @@ export class AuthenticationService {
             
           }else{
             this.loginStatus.next(true);
-            console.log(data);
+            console.log(data['data']);
             console.log('ala');
-            Cookie.set('authToken',data["data"]);
+            localStorage.setItem('authToken',data['data']);
+            const decoded = jwt(data['data']);
+            //console.log(decoded.Data.name);
+            this.currentUser.next(decoded.Data.name);
             this.toastr.successToastr("Login Successful","Success!");
             setTimeout(()=>{
               this.router.navigate(["user/home"]);
-            },1000);
+            },1000); 
           }
         },
         err=>{
@@ -57,20 +78,23 @@ export class AuthenticationService {
   }
 
   checkLoginStatus(){
-    console.log("checkng status");
-    if(Cookie.get('authToken')){
-      console.log("true");
-      return true;
+    const token = localStorage.getItem('authToken')
+    if(token){
+      try{
+        const decoded = jwt(token);
+        return true;
+      }catch(err){
+        return false;
+      }
+      
     }
-    else{
-      console.log("fasle");
-      return false;
-    }
+    return false;
 
   }
   logout(){
-    Cookie.deleteAll();
+    localStorage.removeItem('authToken');
     this.loginStatus.next(false);
-    
+    this.currentUser.next(null);
+    this.router.navigate(["auth/signIn"]);
   }
 }

@@ -12,11 +12,16 @@ import { Router } from '@angular/router';
 export class NavbarComponent implements OnInit {
 
   public loggedIn$ : Observable<boolean>;
+  public currentUser$ : Observable<string>;
 
   constructor(private authService : AuthenticationService,public route: Router) { }
 
   ngOnInit(): void {
     this.loggedIn$ = this.authService.isLoggedIn;
+    this.currentUser$ = this.authService.isCurrentUser;
+    if(this.loggedIn$){
+      this.route.navigate(["user/home"]);
+    }
   }
 
   logout(){
