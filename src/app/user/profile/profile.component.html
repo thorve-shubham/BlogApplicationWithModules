@@ -1,0 +1,25 @@
+<div class="row justify-content-md-center">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" [(ngModel)]="name" name="name" disabled> 
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="text" class="form-control" [(ngModel)]="email" name="email" disabled> 
+            </div>   
+            <form [formGroup]="profileForm" (ngSubmit)="updatePassword(profileForm.value)">
+                <div class="form-group">
+                    <label for="password">New Password</label>
+                    <input type="password" class="form-control" name="password" formControlName="password"> 
+                </div>
+                <div class="alert alert-secondary" [hidden]="!profileForm.controls.password.touched || profileForm.controls.password.valid">Password is weak</div>
+                <div class="form-group">
+                    <label for="password">Confirm Password</label>
+                    <input type="password" class="form-control" name="password" formControlName="confirmPassword"> 
+                </div>
+                <div class="alert alert-secondary" [hidden]="!profileForm.controls.confirmPassword.touched || profileForm.controls.confirmPassword.valid">Password is not matching</div>
+                <button type="submit" class="btn btn-dark" [disabled]="profileForm.invalid">Update Password</button>
+            </form>
+        </div>
+</div>

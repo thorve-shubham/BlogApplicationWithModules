@@ -6,8 +6,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { HttpClientModule } from '@angular/common/http';
-import { AuthenticationService } from './services/authentication.service';
 import { NavbarComponent } from './navbar/navbar.component';
+import { SocketService } from './services/socket.service';
+
+
+
 
 @NgModule({
   declarations: [
@@ -21,9 +24,9 @@ import { NavbarComponent } from './navbar/navbar.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
   ],
-  providers: [],
+  providers: [SocketService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

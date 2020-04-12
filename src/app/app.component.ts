@@ -8,10 +8,10 @@ import { Cookie } from 'ng2-cookies';
 })
 export class AppComponent implements OnInit {
 
-  public currentUser : boolean;
+  
 
   constructor(){
-    this.currentUser = false;
+   
   }
 
   ngOnInit(): void {

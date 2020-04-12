@@ -1,1 +1,23 @@
-<p>home works!</p>
+<div class="row">
+    <div class="col-md-7">
+        <div *ngIf="!blogsFound">
+            <div class="alert alert-info">No Blogs to display</div>
+        </div>
+        <div *ngIf="blogsFound">
+            <h3>Blogs....</h3><hr>
+            <div class="row">
+                <div class="col-md-3" *ngFor="let blog of blogs">
+                    <app-blog-item [blog]="blog" [userId]="userInfo.userId" (deleteEvent)="deleteBlog($event)"></app-blog-item>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5 justify-content-md-right">
+        <app-blog-create (addBlog)="addBlogNow($event)"></app-blog-create>
+    </div>
+</div>
+
+
+
+
+

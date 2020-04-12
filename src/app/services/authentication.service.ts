@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { signUpModel } from '../sharedModel/signUpModel';
 import { BehaviorSubject } from 'rxjs';
-import { Cookie } from 'ng2-cookies';
+
 import { ToastrManager } from 'ng6-toastr-notifications';
 import { Router } from '@angular/router';
 import * as jwt from 'jwt-decode';
+
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +14,11 @@ import * as jwt from 'jwt-decode';
 export class AuthenticationService {
 
   private loginStatus = new BehaviorSubject<boolean>(this.checkLoginStatus());
-  private currentUser = new BehaviorSubject<string>(null);
+  private currentUser = new BehaviorSubject<string>(localStorage.getItem('userName'));
 
-  constructor(public _http:HttpClient,public toastr : ToastrManager,public router:Router) { }
+  constructor(public _http:HttpClient,public toastr : ToastrManager,public router:Router) {
+    console.log("called ser 1");
+   }
 
   get isLoggedIn() {
     return this.loginStatus.asObservable(); 
@@ -26,14 +29,28 @@ export class AuthenticationService {
   }
 
   signUpUser(userData:signUpModel){
-    return this._http.post("http://localhost:3000/user/create",userData);
+    this._http.post("http://localhost:3000/user/create",userData).subscribe(
+      data=>{
+        if(data["error"]==null){
+          this.toastr.successToastr("User Created Successfully","Done!");
+          this.router.navigate(["auth/signIn"]);
+        }else{
+          this.toastr.errorToastr("User Already Exists","Oops!");
+        }
+      },
+      error=>{
+        this.toastr.errorToastr("Something went Wrong","Oops!");
+      }
+    );
   }
+
+  
 
   isAuthenticated(){
     const token = localStorage.getItem('authToken');
     console.log('checking auth');
     if(!token){
-      this.toastr.errorToastr("Access Denied","Oops!");
+      //this.toastr.errorToastr("Access Denied","Oops!");
       return false;
     }else{
       try{
@@ -62,6 +79,7 @@ export class AuthenticationService {
             localStorage.setItem('authToken',data['data']);
             const decoded = jwt(data['data']);
             //console.log(decoded.Data.name);
+            localStorage.setItem('userName',decoded.Data.name);
             this.currentUser.next(decoded.Data.name);
             this.toastr.successToastr("Login Successful","Success!");
             setTimeout(()=>{
@@ -92,9 +110,20 @@ export class AuthenticationService {
 
   }
   logout(){
-    localStorage.removeItem('authToken');
+
     this.loginStatus.next(false);
     this.currentUser.next(null);
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userName');
+    console.log("alare");
     this.router.navigate(["auth/signIn"]);
+    console.log("alare");
+  }
+
+  setLogOutStatus(){
+    this.loginStatus.next(false);
+    this.currentUser.next(null);
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userName');
   }
 }

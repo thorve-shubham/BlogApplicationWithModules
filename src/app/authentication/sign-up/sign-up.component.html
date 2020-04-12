@@ -1,1 +1,28 @@
-<p>sign-up works!</p>
+<div class="row justify-content-md-center">
+    <div class="col-md-6">
+        <form [formGroup]="signUpFormGroup" (ngSubmit)="createUser(signUpFormGroup.value)">  
+            <!-- when using form group ngModel for cerating ref in this html is not possible instead use formgroup to access those elements -->
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" name="name" formControlName="name"> 
+            </div>
+            <div class="alert alert-secondary" [hidden]="!signUpFormGroup.controls.name.touched || signUpFormGroup.controls.name.valid">Name is required</div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="text" class="form-control" name="email" formControlName="email"> 
+            </div>
+            <div class="alert alert-secondary" [hidden]="!signUpFormGroup.controls.email.touched || signUpFormGroup.controls.email.valid">Invalid Email</div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" formControlName="password"> 
+            </div>
+            <div class="alert alert-secondary" [hidden]="!signUpFormGroup.controls.password.touched || signUpFormGroup.controls.password.valid">Password is required</div>
+            <div class="form-group">
+                <label for="cpassword">Confirm Password</label>
+                <input type="password" class="form-control" name="cpassword" formControlName="confirmPassword"> 
+            </div>
+            <div class="alert alert-secondary" [hidden]="!signUpFormGroup.controls.confirmPassword.touched || signUpFormGroup.controls.confirmPassword.valid">Does not match</div>
+            <button class="btn btn-dark" [disabled]="signUpFormGroup.invalid" type="submit">Sign Up</button>
+        </form>
+    </div>
+</div>

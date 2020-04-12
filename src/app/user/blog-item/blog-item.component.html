@@ -1,0 +1,10 @@
+
+<div class="card" style="width: 16rem;">
+    <div class="card-body">
+      <h5 class="card-title">{{ blog.author }}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">{{ blog.topic }}</h6>
+      <p class="card-text">{{ blog.title }}</p>
+      <a  class="card-link">View</a>
+      <a  class="card-link" *ngIf="isOwner" (click)="delete()">Delete</a>
+    </div>
+</div>

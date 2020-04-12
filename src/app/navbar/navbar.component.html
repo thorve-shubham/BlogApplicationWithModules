@@ -8,15 +8,19 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
 
-            <a class="navbar-brand" *ngIf="(currentUser$ | async) as username" href="#">Welcome {{username}}</a>
+            <a class="nav-item nav-link active" routerLink="user/profile" *ngIf="(currentUser$ | async) as username">{{username}}</a>
+
+            <a class="nav-item nav-link" *ngIf="(loggedIn$ | async)" routerLink="user/home" routerLinkActive="active">Home</a>
 
             <a class="nav-item nav-link" *ngIf="!(loggedIn$ | async)" routerLink="auth/signUp" routerLinkActive="active">SignUp</a>
                
             <a class="nav-item nav-link" *ngIf="!(loggedIn$ | async)" routerLink="auth/signIn" routerLinkActive="active">SignIn</a>
                 
-            <a class="nav-item nav-link active" *ngIf="(loggedIn$ | async)">About </a>
+            <a class="nav-item nav-link" *ngIf="(loggedIn$ | async)"> About </a>
 
-            <a class=" btn btn-danger" (click)="logout()" *ngIf="(loggedIn$ | async) as val">Logout</a>
+            <!-- <a class="nav-item nav-link" routerLink="user/createBlog" routerLinkActive="active" *ngIf="(loggedIn$ | async)"> Create </a> -->
+
+            <a class="nav-item nav-link" (click)="logout()" *ngIf="(loggedIn$ | async) as val"> Logout </a>
         </div>
         </div>
     </div>
